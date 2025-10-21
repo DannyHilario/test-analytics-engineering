@@ -139,31 +139,6 @@ GROUP BY 1, 2
 ORDER BY 1 DESC, 3 DESC
 ```
 
-### Variante: Pivotear Columnas Dinámicamente
-
-```sql
-{% set event_types = var('tracked_event_types') %}
-
-SELECT
-    event_date,
-
-    {% for event_type in event_types %}
-        COUNT(CASE WHEN event_type = '{{ event_type }}' THEN 1 END) as {{ event_type }}_count,
-        COUNT(DISTINCT CASE WHEN event_type = '{{ event_type }}' THEN user_id END) as {{ event_type }}_users
-        {% if not loop.last %},{% endif %}
-    {% endfor %}
-
-FROM {{ ref('stg_events') }}
-GROUP BY 1
-```
-
-### Override de Variables por Ambiente:
-
-```bash
-# Ejecutar con diferentes event types
-dbt run --vars '{"tracked_event_types": ["page_view", "purchase"]}'
-```
-
 ### Beneficios:
 
 1. **Configuración centralizada**: Cambio en un solo lugar
