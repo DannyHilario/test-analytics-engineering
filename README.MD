@@ -702,7 +702,4 @@ dbt run --select staging_bank_marketing
 dbt run --select kpi_bank_marketing
 dbt test --select staging_bank_marketing
 
-# Full refresh (recrear todo desde cero)
-dbt seed --full-refresh
-dbt run --full-refresh
 ```
