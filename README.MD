@@ -12,34 +12,46 @@
 ## DATASET: Bank Marketing (45,211 registros)
 
 **Fuente:** https://archive.ics.uci.edu/dataset/222/bank+marketing
-**Ubicación:** `Dataset/bank-full.csv`
+**Ubicación:** `bank_marketing_project/seeds/raw_bank_marketing.csv`
 
 ### Diccionario de Datos (17 columnas):
 
-**Variables de Cliente:**
-- `age`: Edad del cliente (numérico)
-- `job`: Tipo de trabajo (categórico: "admin.", "blue-collar", "entrepreneur", "housemaid", "management", "retired", "self-employed", "services", "student", "technician", "unemployed", "unknown")
-- `marital`: Estado civil (categórico: "divorced", "married", "single", "unknown")
-- `education`: Nivel educativo (categórico: "basic.4y", "basic.6y", "basic.9y", "high.school", "illiterate", "professional.course", "university.degree", "unknown")
-- `balance`: Saldo promedio anual en euros (numérico)
+#### Variables de Cliente
 
-**Variables de Préstamos:**
-- `default`: ¿Tiene crédito en default? (categórico: "yes", "no", "unknown")
-- `housing`: ¿Tiene préstamo de vivienda? (categórico: "yes", "no", "unknown")
-- `loan`: ¿Tiene préstamo personal? (categórico: "yes", "no", "unknown")
+| Columna | Descripción | Tipo | Valores Posibles |
+|---------|-------------|------|------------------|
+| `age` | Edad del cliente | Numérico | - |
+| `job` | Tipo de trabajo | Categórico | "admin.", "blue-collar", "entrepreneur", "housemaid", "management", "retired", "self-employed", "services", "student", "technician", "unemployed", "unknown" |
+| `marital` | Estado civil | Categórico | "divorced", "married", "single", "unknown" |
+| `education` | Nivel educativo | Categórico | "basic.4y", "basic.6y", "basic.9y", "high.school", "illiterate", "professional.course", "university.degree", "unknown" |
+| `balance` | Saldo promedio anual en euros | Numérico | - |
 
-**Variables de Campaña:**
-- `contact`: Tipo de comunicación (categórico: "cellular", "telephone")
-- `day`: Último día de contacto del mes (numérico: 1-31)
-- `month`: Último mes de contacto del año (categórico: "jan", "feb", "mar", ..., "dec")
-- `duration`: Duración del último contacto en segundos (numérico)
-- `campaign`: Número de contactos realizados durante esta campaña (numérico)
-- `pdays`: Días desde el último contacto de campaña anterior (numérico: -1 = no fue contactado previamente)
-- `previous`: Número de contactos antes de esta campaña (numérico)
-- `poutcome`: Resultado de la campaña anterior (categórico: "failure", "nonexistent", "success", "unknown")
+#### Variables de Préstamos
 
-**Variable Objetivo:**
-- `y`: ¿El cliente suscribió un depósito a plazo? (categórico: "yes", "no")
+| Columna | Descripción | Tipo | Valores Posibles |
+|---------|-------------|------|------------------|
+| `default` | ¿Tiene crédito en default? | Categórico | "yes", "no", "unknown" |
+| `housing` | ¿Tiene préstamo de vivienda? | Categórico | "yes", "no", "unknown" |
+| `loan` | ¿Tiene préstamo personal? | Categórico | "yes", "no", "unknown" |
+
+#### Variables de Campaña
+
+| Columna | Descripción | Tipo | Valores Posibles |
+|---------|-------------|------|------------------|
+| `contact` | Tipo de comunicación | Categórico | "cellular", "telephone" |
+| `day` | Último día de contacto del mes | Numérico | 1-31 |
+| `month` | Último mes de contacto del año | Categórico | "jan", "feb", "mar", ..., "dec" |
+| `duration` | Duración del último contacto en segundos | Numérico | - |
+| `campaign` | Número de contactos realizados durante esta campaña | Numérico | - |
+| `pdays` | Días desde el último contacto de campaña anterior | Numérico | -1 = no fue contactado previamente |
+| `previous` | Número de contactos antes de esta campaña | Numérico | - |
+| `poutcome` | Resultado de la campaña anterior | Categórico | "failure", "nonexistent", "success", "unknown" |
+
+#### Variable Objetivo
+
+| Columna | Descripción | Tipo | Valores Posibles |
+|---------|-------------|------|------------------|
+| `y` | ¿El cliente suscribió un depósito a plazo? | Categórico | "yes", "no" |
 
 ### Transformaciones Necesarias:
 
