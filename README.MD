@@ -12,6 +12,7 @@
 ## DATASET: Bank Marketing (45,211 registros)
 
 **Fuente:** https://archive.ics.uci.edu/dataset/222/bank+marketing
+
 **Ubicación:** `bank_marketing_project/seeds/raw_bank_marketing.csv`
 
 ### Diccionario de Datos (17 columnas):
@@ -143,8 +144,8 @@ git config --global --list
 ```bash
 mkdir -p ~/projects
 cd ~/projects
-git clone https://github.com/TU_USUARIO/test-entrevista.git
-cd test-entrevista
+git clone https://github.com/TU_USUARIO/test-analytics-engineering.git
+cd test-analytics-engineering
 ```
 
 ---
@@ -196,7 +197,7 @@ gcloud auth list
 ### Paso 6: Crear Proyecto dbt
 
 ```bash
-cd ~/projects/test-entrevista
+cd ~/projects/test-analytics-engineering
 source .venv/bin/activate
 
 # Inicializar dbt
@@ -218,7 +219,7 @@ dbt init bank_marketing_project
 ### Paso 7: Verificar Conexión
 
 ```bash
-cd ~/projects/test-entrevista/bank_marketing_project
+cd ~/projects/test-analytics-engineering/bank_marketing_project
 dbt debug
 ```
 
@@ -229,7 +230,7 @@ dbt debug
 ## Estructura Final
 
 ```
-~/projects/test-entrevista/
+~/projects/test-analytics-engineering/
 ├── .venv/                      # Entorno virtual (no se commitea)
 ├── .gitignore                  # Ignora .venv, credentials, etc.
 ├── Dataset/
@@ -249,7 +250,7 @@ dbt debug
 
 ```bash
 # Activar entorno
-cd ~/projects/test-entrevista
+cd ~/projects/test-analytics-engineering
 source .venv/bin/activate
 
 # Sincronizar con GitHub
@@ -267,7 +268,7 @@ dbt test
 ## Paso 8: Cargar Datos y Crear Modelos
 
 ```bash
-cd ~/projects/test-entrevista/bank_marketing_project
+cd ~/projects/test-analytics-engineering/bank_marketing_project
 source ../.venv/bin/activate
 
 # Cargar datos raw a BigQuery como seed
@@ -466,7 +467,7 @@ Ver instrucciones detalladas en: `.github/SETUP_SECRETS.md`
 ### Estructura del Repositorio
 
 ```
-test-entrevista/
+test-analytics-engineering/
 ├── .github/
 │   ├── workflows/
 │   │   └── dbt_ci_cd.yml          # Pipeline CI/CD
@@ -506,7 +507,7 @@ Archivos no commiteados (en .gitignore):
 
 ```bash
 # Activar entorno
-cd ~/projects/test-entrevista
+cd ~/projects/test-analytics-engineering
 source .venv/bin/activate
 
 # Desarrollo local
