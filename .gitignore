@@ -1,0 +1,38 @@
+# Python
+.venv/
+venv/
+env/
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+
+# dbt
+target/
+dbt_packages/
+logs/
+.user.yml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# NOTA: Este es un repositorio de prueba/aprendizaje
+# En producción, deberías agregar:
+# - *.json (excepto packages.yml)
+# - .env
+# - .gcp/
+# - profiles.yml
+# - *.key, *.pem
+# - credentials.json

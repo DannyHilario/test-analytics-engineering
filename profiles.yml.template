@@ -1,0 +1,27 @@
+# Template de profiles.yml para dbt
+# Este archivo es solo una referencia. El script setup.sh genera automáticamente
+# el archivo ~/.dbt/profiles.yml usando las variables de entorno.
+#
+# Si prefieres crearlo manualmente:
+# 1. Copia este archivo a ~/.dbt/profiles.yml
+# 2. Reemplaza YOUR_PROJECT_ID con tu project ID de Google Cloud
+# 3. Reemplaza YOUR_USER con tu usuario del sistema
+#
+# Configuración generada por setup.sh usando:
+# - Variable $DBT_PROJECT_ID
+# - Variable $DBT_KEYFILE_PATH
+
+bank_marketing_project:
+  outputs:
+    dev:
+      dataset: analytics
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: /home/YOUR_USER/.gcp/dbt-sa-key.json
+      location: US
+      method: service-account
+      priority: interactive
+      project: YOUR_PROJECT_ID
+      threads: 4
+      type: bigquery
+  target: dev

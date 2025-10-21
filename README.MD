@@ -3,9 +3,10 @@
 ## Índice
 
 1. [Dataset y Transformaciones](#dataset-bank-marketing-45211-registros)
-2. [Setup en Ubuntu](#setup-en-ubuntu)
-3. [CI/CD con GitHub Actions](#paso-9-cicd-con-github-actions)
-4. [Resumen del Proyecto](#resumen-del-proyecto)
+2. [Instalación Rápida (Automatizada)](#instalación-rápida-automatizada)
+3. [Setup Manual en Ubuntu](#setup-manual-en-ubuntu)
+4. [CI/CD con GitHub Actions](#paso-9-cicd-con-github-actions)
+5. [Resumen del Proyecto](#resumen-del-proyecto)
 
 ---
 
@@ -97,7 +98,204 @@ Análisis de datos reveló que conversaciones menores a 60 segundos tienen tasa 
 
 ---
 
-## SETUP EN UBUNTU
+## INSTALACIÓN RÁPIDA (Automatizada)
+
+### Requisitos Previos
+
+Antes de comenzar, necesitas tener:
+
+1. **Ubuntu 22.04 LTS** (o superior)
+2. **Acceso a GitHub** (token PAT o SSH keys configurado)
+3. **Credenciales de Google Cloud:**
+   - Archivo JSON del service account (`dbt-sa-key.json`)
+   - ID del proyecto de BigQuery: `long-province-475619-v2`
+
+---
+
+### Instalación en 5 Pasos
+
+#### Paso 1: Preparar credenciales de Google Cloud
+
+```bash
+# Crear directorio para credenciales
+mkdir -p ~/.gcp
+
+# Copiar el archivo de credenciales
+# Opción A: Si lo tienes en tu máquina local, usa scp
+scp /ruta/local/dbt-sa-key.json usuario@vm:~/.gcp/
+
+# Opción B: Si lo copias manualmente, crea el archivo
+nano ~/.gcp/dbt-sa-key.json
+# Pega el contenido JSON y guarda (Ctrl+O, Enter, Ctrl+X)
+
+# Ajustar permisos
+chmod 600 ~/.gcp/dbt-sa-key.json
+```
+
+---
+
+#### Paso 2: Configurar Git
+
+```bash
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu-email@gmail.com"
+git config --global credential.helper store
+```
+
+**Autenticación GitHub:**
+1. Ve a GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
+2. Generate new token → Selecciona scope `repo` → Copiar token (ghp_...)
+3. Úsalo como password cuando Git te lo pida
+
+---
+
+#### Paso 3: Clonar el repositorio
+
+```bash
+mkdir -p ~/projects
+cd ~/projects
+git clone https://github.com/TU_USUARIO/test-analytics-engineering.git
+cd test-analytics-engineering
+```
+
+---
+
+#### Paso 4: Configurar variables de entorno
+
+```bash
+# Configurar variables de entorno para la sesión actual
+export DBT_PROJECT_ID="long-province-475619-v2"
+export DBT_KEYFILE_PATH="$HOME/.gcp/dbt-sa-key.json"
+
+# OPCIONAL: Agregar a ~/.bashrc para que persistan entre sesiones
+echo 'export DBT_PROJECT_ID="long-province-475619-v2"' >> ~/.bashrc
+echo 'export DBT_KEYFILE_PATH="$HOME/.gcp/dbt-sa-key.json"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+#### Paso 5: Ejecutar instalación automatizada
+
+```bash
+# Dar permisos de ejecución al script
+chmod +x scripts/setup.sh
+
+# Ejecutar instalación automatizada
+./scripts/setup.sh
+```
+
+**El script realizará automáticamente:**
+- ✅ Verificar e instalar Python 3.11
+- ✅ Verificar e instalar Google Cloud SDK
+- ✅ Autenticar con Google Cloud
+- ✅ Crear entorno virtual Python
+- ✅ Instalar dependencias (dbt-bigquery 1.7.4)
+- ✅ Configurar `~/.dbt/profiles.yml`
+- ✅ Verificar conexión con BigQuery (`dbt debug`)
+- ✅ (Opcional) Cargar datos y ejecutar modelos
+
+**Salida esperada:**
+```
+========================================
+  ✓ Instalación completada exitosamente
+========================================
+
+Variables de entorno configuradas:
+  DBT_PROJECT_ID=long-province-475619-v2
+  DBT_KEYFILE_PATH=/home/usuario/.gcp/dbt-sa-key.json
+```
+
+---
+
+### Verificar Instalación
+
+```bash
+# Activar entorno virtual
+source .venv/bin/activate
+
+# Ir al proyecto dbt
+cd bank_marketing_project
+
+# Verificar conexión
+dbt debug
+# Debería mostrar: "All checks passed!"
+
+# Ejecutar pipeline completo
+dbt seed              # Cargar datos (45,211 registros)
+dbt run               # Ejecutar modelos
+dbt test              # Ejecutar 26 tests de calidad
+```
+
+---
+
+### Comandos Útiles Post-Instalación
+
+```bash
+# Activar entorno (desde el directorio raíz del proyecto)
+cd ~/projects/test-analytics-engineering
+source .venv/bin/activate
+
+# Trabajar con dbt
+cd bank_marketing_project
+dbt deps                # Instalar dependencias (dbt-utils)
+dbt seed                # Cargar datos raw
+dbt run                 # Ejecutar modelos (staging + marts)
+dbt test                # Ejecutar tests (26 tests)
+dbt docs generate       # Generar documentación
+dbt docs serve          # Ver documentación en navegador (puerto 8080)
+
+# Ejecutar modelos específicos
+dbt run --select staging_bank_marketing
+dbt run --select kpi_bank_marketing
+dbt test --select staging_bank_marketing
+
+# Full refresh (recrear todo desde cero)
+dbt seed --full-refresh
+dbt run --full-refresh
+```
+
+---
+
+### Solución de Problemas
+
+**Error: "DBT_PROJECT_ID no está configurada"**
+```bash
+export DBT_PROJECT_ID="long-province-475619-v2"
+./scripts/setup.sh
+```
+
+**Error: "Archivo de credenciales no encontrado"**
+```bash
+# Verificar que el archivo existe
+ls -la ~/.gcp/dbt-sa-key.json
+
+# Verificar permisos (debe ser 600)
+chmod 600 ~/.gcp/dbt-sa-key.json
+```
+
+**Error: "dbt debug failed"**
+```bash
+# Verificar autenticación Google Cloud
+gcloud auth list
+gcloud config get-value project
+
+# Reautenticar si es necesario
+gcloud auth activate-service-account --key-file=~/.gcp/dbt-sa-key.json
+gcloud config set project long-province-475619-v2
+```
+
+**Error: "All checks passed" pero no puede crear tablas**
+```bash
+# Verificar permisos del service account en BigQuery
+# El service account necesita roles:
+# - BigQuery Data Editor
+# - BigQuery Job User
+```
+
+---
+
+## SETUP MANUAL EN UBUNTU
 
 ### Paso 1: Sistema y Python 3.11
 
@@ -245,23 +443,6 @@ dbt debug
 ```
 
 ---
-
-## Comandos de Uso Diario
-
-```bash
-# Activar entorno
-cd ~/projects/test-analytics-engineering
-source .venv/bin/activate
-
-# Sincronizar con GitHub
-git pull
-
-# Trabajar con dbt
-cd bank_marketing_project
-dbt debug
-dbt run
-dbt test
-```
 
 ---
 
