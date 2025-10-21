@@ -24,7 +24,7 @@ SOURCES → STAGING → INTERMEDIATE → MARTS → EXPOSURES
 
 ---
 
-## 1. SOURCES - Definición en _sources.yml
+## 1. FUENTES - Definición en sources.yml
 
 ```yaml
 version: 2
@@ -61,7 +61,6 @@ sources:
 ## 2. SEEDS - Tasas de Conversión
 
 ```csv
-# seeds/currency_conversion_rates.csv
 fecha,moneda_origen,moneda_destino,tasa
 2024-01-01,MXN,USD,0.0590
 2024-01-01,EUR,USD,1.1000
@@ -78,9 +77,9 @@ seeds:
 
 ---
 
-## 3. STAGING LAYER (4 modelos - VIEW)
+## 3. Flujo de Modelos (4 modelos - VIEW)
 
-### stg_crm__customers.sql
+### stg_crm_customers.sql
 ```sql
 {{ config(materialized='view', schema='staging') }}
 
@@ -93,7 +92,7 @@ SELECT
 FROM {{ source('crm_postgres', 'customers') }}
 ```
 
-### stg_sales__orders.sql
+### stg_sales_orders.sql
 ```sql
 {{ config(materialized='view', schema='staging') }}
 
@@ -109,7 +108,7 @@ FROM {{ source('sales_snowflake', 'orders') }}
 WHERE id_pedido IS NOT NULL
 ```
 
-### stg_hr__employees.sql (futuro)
+### stg_hr_employees.sql (futuro)
 ```sql
 {{ config(materialized='view', schema='staging') }}
 
@@ -122,7 +121,7 @@ FROM {{ source('hr_system', 'employees') }}
 
 ---
 
-## 4. INTERMEDIATE LAYER (2 modelos - EPHEMERAL)
+##  CAPA INTERMEDIA (2 modelos - EPHEMERAL)
 
 ### int_orders_with_currency.sql
 ```sql
@@ -132,7 +131,7 @@ SELECT
     o.*,
     c.tasa as conversion_rate,
     o.order_amount_local * c.tasa as order_amount_usd
-FROM {{ ref('stg_sales__orders') }} o
+FROM {{ ref('stg_sales_orders') }} o
 LEFT JOIN {{ ref('currency_conversion_rates') }} c
     ON o.order_date = c.fecha
     AND o.currency_code = c.moneda_origen
@@ -153,16 +152,16 @@ SELECT
     e.sales_rep_name,
     o.order_amount_usd
 FROM {{ ref('int_orders_with_currency') }} o
-INNER JOIN {{ ref('stg_crm__customers') }} c
+INNER JOIN {{ ref('stg_crm_customers') }} c
     ON o.customer_id = c.customer_id
-LEFT JOIN {{ ref('stg_hr__employees') }} e
+LEFT JOIN {{ ref('stg_hr_employees') }} e
     ON o.sales_rep_id = e.sales_rep_id
 WHERE o.order_amount_usd IS NOT NULL
 ```
 
 ---
 
-## 5. MARTS LAYER (1 modelo - INCREMENTAL)
+##  CAPA DE NEGOCIO (MARTS) (1 modelo - INCREMENTAL)
 
 ### fct_daily_sales_performance.sql
 ```sql
@@ -214,7 +213,7 @@ GROUP BY 1, 2, 3, 4
 
 ---
 
-## 6. EXPOSURES - Documentación de Uso
+## 4. EXPOSURES - Documentación de Uso
 
 ```yaml
 # models/marts/sales/exposures.yml
@@ -244,21 +243,21 @@ exposures:
       - ref('fct_daily_sales_performance')
 
     owner:
-      name: Juan García
-      email: jgarcial@deacero.com
+      name: Daniel G. Hilario
+      email: danny.hilario.mgmail.com
 
     tags: [sales, executive, daily]
 ```
 
 ---
 
-## 7. LINAJE COMPLETO (DAG)
+## 5. LINAJE COMPLETO (DAG)
 
 ```
 Sources:
-├─ crm_postgres.customers → stg_crm__customers ─┐
-├─ sales_snowflake.orders → stg_sales__orders ──┼→ int_orders_with_currency
-├─ hr_system.employees → stg_hr__employees ─────┘         ↓
+├─ crm_postgres.customers → stg_crm_customers ─┐
+├─ sales_snowflake.orders → stg_sales_orders ──┼→ int_orders_with_currency
+├─ hr_system.employees → stg_hr_employees ─────┘         ↓
 └─ [seed] currency_conversion_rates ────────────→ int_orders_enriched
                                                            ↓
                                                   fct_daily_sales_performance
@@ -305,13 +304,13 @@ models/
 ├── staging/
 │   ├── _sources.yml
 │   ├── crm/
-│   │   ├── stg_crm__customers.sql
+│   │   ├── stg_crm_customers.sql
 │   │   └── schema.yml
 │   ├── sales/
-│   │   ├── stg_sales__orders.sql
+│   │   ├── stg_sales_orders.sql
 │   │   └── schema.yml
 │   └── hr/
-│       └── stg_hr__employees.sql
+│       └── stg_hr_employees.sql
 │
 ├── intermediate/
 │   └── sales/
