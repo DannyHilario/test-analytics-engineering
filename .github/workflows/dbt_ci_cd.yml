@@ -77,10 +77,6 @@ jobs:
         working-directory: ./bank_marketing_project
         run: dbt test
 
-      - name: Generate dbt docs
-        working-directory: ./bank_marketing_project
-        run: dbt docs generate
-
       - name: Cleanup credentials
         if: always()
         run: rm -f ~/.gcp/dbt-sa-key.json
