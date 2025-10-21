@@ -24,8 +24,7 @@
 ```sql
 SELECT
     order_id,
-    {{ cents_to_dollars('amount') }} as amount_dollars,  -- Llama macro
-    '{{ target.schema }}' as schema_name                  -- Inserta variable
+    {{ cents_to_dollars('amount') }} as amount_dollars
 FROM {{ ref('stg_orders') }}                               -- Referencia modelo
 WHERE order_date >= '{{ var("start_date") }}'              -- Variable del proyecto
 ```
