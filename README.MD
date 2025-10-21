@@ -652,12 +652,10 @@ test-analytics-engineering/
 ├── .github/
 │   ├── workflows/
 │   │   └── dbt_ci_cd.yml          # Pipeline CI/CD
-│   └── SETUP_SECRETS.md            # Guía de configuración
 ├── Dataset/
 │   └── raw_bank_marketing.csv      # Datos raw (45,211 registros)
 ├── Teorico/
 │   ├── Sec1.MD - Sec5.MD           # Examen teórico dbt
-│   └── Apuntes.MD                  # Conceptos fundamentales dbt
 ├── bank_marketing_project/         # Proyecto dbt
 │   ├── models/
 │   │   ├── staging/
@@ -674,9 +672,7 @@ test-analytics-engineering/
 │   └── packages.yml                # Dependencias (dbt-utils)
 ├── .gitignore
 ├── requirements.txt                # Python dependencies
-├── Instrucciones.MD                # Este archivo
-├── InstruccionesDetalle.MD         # Documentación técnica detallada
-└── README.MD                       # Enunciado del ejercicio
+└── README.MD                       # Instrucciones de ejecución | Ejercicio resuelto
 
 Archivos no commiteados (en .gitignore):
 ├── .venv/                          # Entorno virtual Python
@@ -710,21 +706,3 @@ dbt test --select staging_bank_marketing
 dbt seed --full-refresh
 dbt run --full-refresh
 ```
-
-### Próximos Pasos (Mejoras Futuras)
-
-1. **Ambientes Múltiples:** Configurar dev, staging, producción
-2. **Scheduled Runs:** Ejecución diaria automática del pipeline
-3. **dbt Docs Hosting:** Publicar documentación en GitHub Pages
-4. **Métricas Avanzadas:** Análisis de cohortes, CLV (Customer Lifetime Value)
-5. **Incremental Models:** Optimizar para datasets más grandes
-6. **dbt Cloud:** Migrar a dbt Cloud para scheduling y observability
-7. **Alerting:** Integración con Slack para notificaciones en tiempo real
-8. **Data Quality Monitoring:** Integración con Great Expectations
-
----
-
-**Proyecto completado:** 2024-10-19
-**Autor:** Daniel Hilario
-**Versión:** 1.0
-**Estado:** Producción - CI/CD Activo
