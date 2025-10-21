@@ -194,4 +194,18 @@ SELECT * FROM test_failures.column_values_below_std_dev_threshold_fct_orders_ord
 - No funciona bien con datos bimodales o muy asimétricos
 - Sensible a outliers existentes (afectan cálculo de μ y σ)
 
+**⚠️ NOTA ESTADÍSTICA IMPORTANTE:**
+
+Este test solo detecta outliers **por encima** del promedio (cola superior de la distribución). Para una validación estadísticamente completa, se debería implementar detección **bilateral** que capture outliers en ambas direcciones:
+
+```sql
+-- Versión bilateral (más completa):
+WHERE {{ column_name }} < (μ - N×σ)  -- Outliers inferiores
+   OR {{ column_name }} > (μ + N×σ)  -- Outliers superiores
+```
+
+**Cuándo usar cada enfoque:**
+- **Unilateral (solo superior):** Cuando la lógica de negocio ya restringe valores bajos (ej: montos de venta > 0) y solo importa detectar valores excesivamente altos
+- **Bilateral (recomendado):** Para métricas sin restricciones inherentes (ej: balance de cuenta, temperatura, tiempos de respuesta) donde valores anormalmente bajos también indican problemas
+
 ---
