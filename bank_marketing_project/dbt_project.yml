@@ -1,0 +1,39 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'bank_marketing_project'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'bank_marketing_project'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuración de modelos
+# Documentación: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  bank_marketing_project:
+    # Modelos de staging: vistas ligeras para transformaciones básicas
+    staging:
+      +materialized: view
+      +schema: staging
+
+    # Modelos de marts: tablas materializadas para análisis y KPIs
+    marts:
+      +materialized: table
+      +schema: marts

@@ -1,0 +1,98 @@
+version: 2
+
+models:
+  - name: staging_bank_marketing
+    description: "Datos limpios y normalizados de la campaña de marketing bancario"
+    columns:
+      - name: age
+        description: "Edad del cliente en años"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 18
+              max_value: 100
+
+      - name: job_type
+        description: "Tipo de trabajo (valores unknown convertidos a null)"
+
+      - name: marital_status
+        description: "Estado civil (valores unknown convertidos a null)"
+
+      - name: education_level
+        description: "Nivel educativo (valores unknown convertidos a null)"
+
+      - name: account_balance_eur
+        description: "Saldo promedio anual en euros (puede ser negativo indicando sobregiro)"
+        tests:
+          - not_null
+
+      - name: has_default
+        description: "Indica si el cliente tiene crédito en default (booleano)"
+
+      - name: has_housing_loan
+        description: "Indica si el cliente tiene préstamo hipotecario (booleano)"
+
+      - name: has_personal_loan
+        description: "Indica si el cliente tiene préstamo personal (booleano)"
+
+      - name: contact_type
+        description: "Tipo de comunicación utilizada (cellular o telephone)"
+        tests:
+          - accepted_values:
+              values: ['cellular', 'telephone']
+
+      - name: contact_day
+        description: "Día del mes del último contacto"
+        tests:
+          - not_null
+
+      - name: contact_month
+        description: "Mes del año del último contacto"
+        tests:
+          - not_null
+
+      - name: call_duration_minutes
+        description: "Duración de la última llamada en minutos"
+
+      - name: call_duration_seconds
+        description: "Duración de la última llamada en segundos (campo original)"
+        tests:
+          - not_null
+
+      - name: num_contacts_campaign
+        description: "Número de contactos realizados durante esta campaña"
+        tests:
+          - not_null
+
+      - name: days_since_last_contact
+        description: "Días desde el último contacto de campaña anterior (null si nunca fue contactado previamente)"
+
+      - name: num_contacts_previous
+        description: "Número de contactos realizados antes de esta campaña"
+        tests:
+          - not_null
+
+      - name: previous_outcome
+        description: "Resultado de la campaña anterior (valores unknown convertidos a null)"
+
+      - name: subscribed
+        description: "Indica si el cliente suscribió un depósito a plazo (variable objetivo)"
+        tests:
+          - not_null
+
+      - name: age_group
+        description: "Grupo etario para segmentación"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['18-29', '30-39', '40-49', '50-59', '60+']
+
+      - name: balance_category
+        description: "Categoría del saldo de la cuenta"
+        tests:
+          - not_null
+
+      - name: campaign_intensity
+        description: "Clasificación de la intensidad de contactos de la campaña"
+        tests:
+          - not_null

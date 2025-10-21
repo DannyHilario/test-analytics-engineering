@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: kpi_bank_marketing
+    description: "KPIs de efectividad de campaña de marketing bancario. Contiene métricas de conversión segmentadas por diferentes dimensiones para análisis de desempeño."
+    columns:
+      - name: segment
+        description: "Dimensión de análisis (ej: Grupo de Edad, Ocupación, Canal, etc.)"
+        tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'General'
+                - 'Grupo de Edad'
+                - 'Ocupación'
+                - 'Nivel Educativo'
+                - 'Estado Civil'
+                - 'Acumulado en Cuenta'
+                - 'Intensidad de Campaña'
+                - 'Canal'
+                - 'Resultado Campaña Anterior'
+                - 'Mes de Contacto'
+
+      - name: segment_value
+        description: "Valor específico dentro del segmento (ej: 18-29, management, cellular, etc.)"
+        tests:
+          - not_null
+
+      - name: total_contacts
+        description: "Número total de contactos (llamadas telefónicas) realizados en este segmento"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 1
+              inclusive: true
+
+      - name: conversions
+        description: "Número de conversiones exitosas (clientes que aceptaron y suscribieron el depósito a plazo)"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+
+      - name: conversion_rate_pct
+        description: "Tasa de conversión en porcentaje. Fórmula: (conversions / total_contacts) * 100. Representa el % de llamadas que resultaron en venta."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 100
+              inclusive: true
+
+      - name: relative_effectiveness_index
+        description: "Índice de efectividad relativa comparado con la tasa de conversión general. 1.0 = igual a la media, >1.0 = mejor que la media, <1.0 = peor que la media"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              inclusive: true
+
+      - name: report_generated_at
+        description: "Timestamp de cuando se generó este reporte"
+        tests:
+          - not_null
