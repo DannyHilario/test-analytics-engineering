@@ -229,7 +229,7 @@ dbt test              # Ejecutar 26 tests de calidad
 
 ---
 
-### Comandos Útiles Post-Instalación
+### Comandos Útiles Post-Instalación TTTTT
 
 ```bash
 # Activar entorno (desde el directorio raíz del proyecto)
